@@ -1,0 +1,57 @@
+from selenium import webdriver
+from time import sleep
+
+location = 'D:\webdriver\chromedriver.exe'
+driver = webdriver.Chrome(executable_path=location)
+url = 'https://www.instagram.com/accounts/login/'
+driver.get(url)
+sleep(2)
+
+Username = driver.find_element_by_name('username').send_keys("USERNAME")
+Password = driver.find_element_by_name('password').send_keys("PASSWORD")
+
+login = driver.find_element_by_xpath( '/html/body/div[1]/section/main/div/article/div/div[1]/div/form/div[4]/button/div').click()
+sleep(6)
+
+driver.find_element_by_xpath("//*[contains(text(), 'Not Now')]").click()
+sleep(2)
+
+driver.get('https://www.instagram.com/accounts/access_tool/current_follow_requests?hl=en')
+sleep(2)
+try:
+    view = driver.find_element_by_xpath('/html/body/div[1]/section/main/div/article/main/button')
+
+    try:
+        while view.is_displayed():
+            view.click()
+            sleep(2)
+
+    except Exception as e:
+        print("")
+
+except Exception as e:
+    print('')
+
+
+
+name_list = []
+names = driver.find_elements_by_class_name("-utLf")
+
+for x in names:
+    name_list.append(x.text)
+
+#Number_of_pending_request
+print('Number of pending requests = '+str(len(names)))
+
+
+for x in name_list:
+    search = driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input")
+    print("removing => "+x)
+    search.send_keys(x)
+    sleep(4)
+    click_name = driver.find_element_by_xpath( '/html/body/div[1]/section/nav/div[2]/div/div/div[2]/div[2]/div[2]/div/a/div/div[2]/div/span').click()
+    sleep(6)
+    req_click = driver.find_element_by_xpath('/html/body/div[1]/section/main/div/header/section/div[1]/button').click()
+    sleep(2)
+    unfollow = driver.find_element_by_xpath('/html/body/div[4]/div/div/div[3]/button[1]').click()
+    sleep(2)
